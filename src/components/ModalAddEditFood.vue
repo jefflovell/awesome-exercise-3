@@ -1,68 +1,81 @@
 <template>
-	<q-card class="form-card">
-    <q-card-section>
-      <div class="text-h6 heading">{{ type }} Food</div>
-    </q-card-section>
+	<q-card
+    class="form-card" >
+    <form
+      @submit.prevent="onSubmit" >
+      <q-card-section>
+        <div class="text-h6 heading">{{ type }} Food</div>
+      </q-card-section>
 
-    <q-card-section>
+      <q-card-section>
 
-    	<div class="row q-mb-md">
-	      <q-input
-	      	filled
-	      	v-model="foodToSubmit.name"
-	      	label="Name (e.g. Burger)"
-	      	class="col" />
-    	</div>
+        <div class="row q-mb-md">
+          <q-input
+            filled
+            v-model="foodToSubmit.name"
+            ref="foodName"
+            :rules="[val => !!val || 'Please type something', val => val.length <= 20 || 'Please use maximum 20 characters']"
+            label="Name (e.g. Burger) *"
+            class="col" />
+        </div>
 
-    	<div class="row q-mb-md">
-    		<q-input
-		      filled
-		      v-model="foodToSubmit.description"
-		      label="Description"
-		      type="textarea"
-		      class="col" />
-    	</div>
+        <div class="row q-mb-md">
+          <q-input
+            filled
+            v-model="foodToSubmit.description"
+            ref="foodDescription"
+            :rules="[val => val.length <= 135 || 'Please use maximum 135 characters']"
+            label="Description"
+            type="textarea"
+            class="col" />
+        </div>
 
-    	<div class="row q-mb-md">
-	      <q-input
-	      	filled
-	      	v-model="foodToSubmit.imageUrl"
-	      	label="Image URL"
-	      	class="col" />
-	      <q-img
-          :src="foodToSubmit.imageUrl ? foodToSubmit.imageUrl : 'statics/image-placeholder.png'"
-          class="q-ml-sm"
-          contain />
-    	</div>
+        <div class="row q-mb-md">
+          <q-input
+            filled
+            v-model="foodToSubmit.imageUrl"
+            ref="foodImage"
+            label="Image URL"
+            class="col" />
+          <q-img
+            :src="foodToSubmit.imageUrl ? foodToSubmit.imageUrl : 'statics/image-placeholder.png'"
+            class="q-ml-sm"
+            contain />
+        </div>
 
-    	<div class="q-mb-md">
-    		<div class="row">
-					<p class="q-mb-none">Rating:</p>
-    		</div>
-				<div class="row">
-	    		<q-rating
-			      v-model="foodToSubmit.rating"
-			      size="2em"
-			      color="orange" />
-				</div>
-    	</div>
-    	
-    </q-card-section>
+        <div class="q-mb-md">
+          <div class="row">
+            <p class="q-mb-none">Rating:</p>
+          </div>
+          <div class="row">
+            <q-rating
+              v-model="foodToSubmit.rating"
+              ref="foodRating"
+              size="2em"
+              color="orange" />
+          </div>
+        </div>
+        
+      </q-card-section>
 
-    <q-card-actions align="right">
-      <q-btn
-      	label="Cancel"
-      	color="grey"
-      	v-close-popup />
-      <q-btn
-      	label="Save"
-      	color="primary"
-      	v-close-popup />
-    </q-card-actions>
+      <q-card-actions align="right">
+        <q-btn
+          label="Cancel"
+          color="grey"
+          v-close-popup />
+        <q-btn
+          label="Save"
+          type="submit"
+          color="primary"
+          v-close-popup />
+      </q-card-actions>
+    </form>
   </q-card>
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
+
 	export default {
 		props: ['type'],
 		data() {
@@ -74,7 +87,27 @@
 					imageUrl: ''
 				}
 			}
-		}
+		},
+    methods: {
+      ...mapActions('foods', ['addFood']),
+      onSubmit() {
+        this.$refs.foodName.validate()
+        if ( !this.$refs.foodName.hasError ) {
+          this.submitFood()
+          this.$q.notify({
+            icon: 'done',
+            color: 'positive',
+            message: 'Food added'
+          })
+
+        }
+      },
+      submitFood() {
+        console.log('submitFood')
+        this.addFood(this.foodToSubmit)
+        this.$emit('close')
+      }
+    }
 	}
 </script>
 

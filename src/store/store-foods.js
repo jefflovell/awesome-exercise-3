@@ -32,10 +32,10 @@ const mutations = {
     // },
     deleteFood( state, id ){
         Vue.delete( state.foods, id )
+    },
+    addFood( state, payload ) {
+      Vue.set(state.foods, payload.id, payload.food)
     }
-    // addFood( state, payload ) {
-    //   Vue.set(state.foods, payload.id, payload.food)
-    // }
 }
 
 const actions = {
@@ -45,15 +45,15 @@ const actions = {
     // },
     deleteFood({ commit }, id ) {
         commit( 'deleteFood', id )
+    },
+    addFood({ commit }, food) {
+      let foodId = uid()
+      let payload = {
+        id: foodId,
+        food: food
+      }
+      commit('addFood', payload)
     }
-    // addTask({ commit }, task) {
-    //   let foodId = uid()
-    //   let payload = {
-    //     id: foodId,
-    //     food: food
-    //   }
-    //   commit('addFood', payload)
-    // }
 }
 
 const getters = {
