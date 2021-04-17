@@ -2,7 +2,7 @@
 	<q-card 
 		class="card">
     <q-img
-      :src="food.imageUrl"
+      :src="food.imageUrl ? food.imageUrl : 'statics/image-placeholder.png'"
       basic
       contain
     >
@@ -22,7 +22,8 @@
     </q-card-section>
 
     <q-card-section>
-      {{ food.description }}
+      <span v-if="food.description">{{ food.description }}</span>
+      <i v-else>No description provided.</i>
     </q-card-section>
 
     <q-card-actions
@@ -34,7 +35,7 @@
       	color="blue"
       	flat>Edit</q-btn>
       <q-btn
-        @click.stop="promptToDelete(id)"
+      	@click="promptToDelete()"
       	icon="delete"
       	color="red"
       	flat>Delete</q-btn>
@@ -42,34 +43,44 @@
 
     <q-dialog 
     	v-model="showEditFoodModal">
-      <modal-add-edit-food type="edit" />
+      <modal-add-edit-food 
+      	type="edit"
+      	:food="food"
+      	@close="showEditFoodModal = false" />
     </q-dialog>
+
   </q-card>
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
+	import { mapActions } from 'vuex'
 
 	export default {
-		props: ['food', 'id'],
+		props: ['food'],
 		data() {
 			return {
 				showEditFoodModal: false
 			}
 		},
-    methods : {
-      ...mapActions('foods', ['deleteFood']),
-            promptToDelete(id){
-                this.$q.dialog({
-                title: 'Confirm',
-                message: 'Really delete?',
-                cancel: true,
-                persistent: true
-                }).onOk(() => {
-                    this.deleteFood(id)
-                })
-            }
-    },
+		methods: {
+			...mapActions('foods', ['deleteFood']),
+			promptToDelete() {
+				this.$q.dialog({
+	        title: 'Confirm',
+	        message: 'Really delete?',
+	        persistent: true,
+	        ok: {
+	        	push: true
+	        },
+	        cancel: {
+            push: true,
+            color: 'grey'
+          }
+	      }).onOk(() => {
+	       	this.deleteFood(this.food.id)
+	      })
+			}
+		},
 		components: {
 			'modal-add-edit-food' : require('components/ModalAddEditFood.vue').default
 		}

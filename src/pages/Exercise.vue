@@ -18,15 +18,16 @@
 			<food 
 				v-for="(food, key) in foods"
 				:key="key"
-				:food="food"
-        :id="key" />
+				:food="food" />
 
 	    <button-add
 	    	@click="showAddFoodModal = true" />
 
 	    <q-dialog 
 	    	v-model="showAddFoodModal">
-        <modal-add-edit-food type="add" />
+        <modal-add-edit-food 
+        	@close="showAddFoodModal = false"
+        	type="add" />
       </q-dialog>
     
   	</div>
@@ -39,29 +40,6 @@
 	export default {
 	  data() {
 	  	return {
-	  		// foods: [
-	  		// 	{
-	  		// 		id: 1,
-	  		// 		name: 'Burger',
-	  		// 		description: 'A burger is a sandwich consisting of one or more cooked patties of ground meat, usually beef, placed inside a sliced bread roll or bun.',
-	  		// 		imageUrl: 'https://i.imgur.com/0umadnY.jpg',
-	  		// 		rating: 4
-	  		// 	},
-	  		// 	{
-	  		// 		id: 2,
-	  		// 		name: 'Pizza',
-	  		// 		description: 'Pizza is a savory dish of Italian origin, consisting of a usually round, flattened base of leavened wheat-based dough.',
-	  		// 		imageUrl: 'https://i.imgur.com/b9zDbyb.jpg',
-	  		// 		rating: 5
-	  		// 	},
-	  		// 	{
-	  		// 		id: 3,
-	  		// 		name: 'Sprouts',
-	  		// 		description: 'The Brussels sprout is a member of the Gemmifera Group of cabbages, grown for its edible buds.',
-	  		// 		imageUrl: 'https://i.imgur.com/RbKjUjB.jpg',
-	  		// 		rating: 1
-	  		// 	}
-	  		// ],
 	  		showAddFoodModal: false
 	  	}
 	  },
