@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import solutionFoods from './Solution/store-foods'
+import foods from './store-foods'
 
 Vue.use(Vuex)
 
@@ -13,7 +13,7 @@ Vue.use(Vuex)
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-      solutionFoods
+      foods
     },
 
     // enable strict mode (adds overhead!)
