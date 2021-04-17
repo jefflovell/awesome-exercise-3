@@ -34,6 +34,7 @@
       	color="blue"
       	flat>Edit</q-btn>
       <q-btn
+        @click.stop="promptToDelete(id)"
       	icon="delete"
       	color="red"
       	flat>Delete</q-btn>
@@ -47,13 +48,28 @@
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
+
 	export default {
-		props: ['food'],
+		props: ['food', 'id'],
 		data() {
 			return {
 				showEditFoodModal: false
 			}
 		},
+    methods : {
+      ...mapActions('foods', ['deleteFood']),
+            promptToDelete(id){
+                this.$q.dialog({
+                title: 'Confirm',
+                message: 'Really delete?',
+                cancel: true,
+                persistent: true
+                }).onOk(() => {
+                    this.deleteFood(id)
+                })
+            }
+    },
 		components: {
 			'modal-add-edit-food' : require('components/ModalAddEditFood.vue').default
 		}
